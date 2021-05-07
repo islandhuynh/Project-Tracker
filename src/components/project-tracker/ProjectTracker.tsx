@@ -143,6 +143,7 @@ export const ProjectTracker = () => {
   const [newInputVisibility, setNewInputVisibility] = useState(false);
   const [newTask, setNewTask] = useState<string | undefined>('');
   const [selectedColumn, setSelectedColumn] = useState<keyof columnList | undefined>(undefined);
+  const [draggedTask, setDraggedTask] = useState<string | undefined>(undefined);
 
   const createColumn = <C extends keyof columnList>(columnName: C): JSX.Element => {
     let columnTasks: string[] = [];
@@ -162,7 +163,16 @@ export const ProjectTracker = () => {
     }
 
     return (
-      <li className={`project-column ${columnName}-column`}>
+      <li
+        className={`project-column ${columnName}-column`}
+        onDragOver={e => e.preventDefault()}
+        onDrop={() => {
+          if (draggedTask) {
+            addTask(draggedTask, columnName)
+            setDraggedTask(undefined)
+          }
+        }}
+      >
         <span className="header">
           <h1>{columnTitles[columnName]}</h1>
         </span>
@@ -225,7 +235,15 @@ export const ProjectTracker = () => {
 
   const createTaskList = (taskArray: string[]) => {
     let listArray: JSX.Element[] = [];
-    taskArray.forEach(task => listArray.push(<li className="task-item">{task}</li>));
+    taskArray.forEach(task => listArray.push(
+      <li
+        className="task-item"
+        draggable={true}
+        onDragStart={() => setDraggedTask(task)}
+      >
+        {task}
+      </li>
+    ));
     return listArray;
   }
 

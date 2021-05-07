@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import { ProjectSelect } from './components/ProjectSelect';
+import { ProjectSelect } from './components/project-select/ProjectSelect';
 
 export const Auth = () => {
   const [email, setEmail] = useState('');
@@ -17,16 +17,16 @@ export const Auth = () => {
   return (
     <div className="login-container">
       <Form>
-        <Form.Group controlId="formBasicEmail" onSubmit={() => login(email,password)}> 
+        <Form.Group controlId="formBasicEmail" onSubmit={() => login(email, password)}>
           <Form.Label>Email address</Form.Label>
           <Form.Control type="email" placeholder="Enter email" onChange={e => setEmail(e.target.value)} />
         </Form.Group>
 
         <Form.Group controlId="formBasicPassword">
           <Form.Label>Password</Form.Label>
-          <Form.Control type="password" placeholder="Password" onChange={e => setPassword(e.target.value)}/>
+          <Form.Control type="password" placeholder="Password" onChange={e => setPassword(e.target.value)} />
         </Form.Group>
-        <Button variant="primary" type="submit" onClick={() => login(email,password)}>Login</Button>
+        <Button variant="primary" type="submit" onClick={() => login(email, password)}>Login</Button>
       </Form>
     </div>
   )
@@ -38,7 +38,7 @@ export const App = () => {
 
   return (
     <div className="App">
-      <div> 
+      <div>
         {!authorized ?
           <ProjectSelect />
           :
