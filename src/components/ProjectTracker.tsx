@@ -1,76 +1,76 @@
 import React, { useState } from 'react';
 
-const mockData = {
-  email: 'islandhuynh@gmail.com',
-  uuid: '123abc',
-  projectList: [
-    {
-      name: 'Battleship',
-      completeStatus: false,
-      backlog: [
-        "Drag and Drop Logic for Pieces",
-        "Rotate Pieces",
-      ],
-      progress: [
-        "Computer Logic"
-      ],
-      complete: [
-        "Board",
-        "Standard Pieces",
-        "Connect to Geo API",
-        "Connect to Places API",
-        "Create Authentification with Firebase",
-        "Connect to Geo API",
-        "Connect to Places API",
-        "Create Authentification with Firebase",
-        "Connect to Geo API",
-        "Connect to Places API",
-        "Create Authentification with Firebase",
-        "Connect to Geo API",
-        "Connect to Places API",
-        "Create Authentification with Firebase",
-        "Connect to Geo API",
-        "Connect to Places API",
-        "Create Authentification with Firebase",
-        "Connect to Geo API",
-        "Connect to Places API",
-        "Create Authentification with Firebase",
-        "Connect to Geo API",
-        "Connect to Places API",
-        "Create Authentification with Firebase",
-        "Connect to Geo API",
-        "Connect to Places API",
-        "Create Authentification with Firebase",
-        "Connect to Geo API",
-        "Connect to Places API",
-      ],
-      onHold: [
-        "Intermediate Computer",
-        "Advanced Computer"
-      ]
-    },
-    {
-      name: 'WhatsForLinner',
-      completeStatus: false,
-      backlog: [
-        "Create Favorites Folder"
-      ],
-      progress: [
-        "Create Authentification with Firebase",
-        "Connect to Geo API",
-        "Connect to Places API",
-        "Create Authentification with Firebase",
-      ],
-      complete: [
-        "Button Container",
-        "What to eat logic"
-      ],
-      onHold: [
-        "Sharing Restaurant List"
-      ]
-    }
-  ]
-}
+// const mockData = {
+//   email: 'islandhuynh@gmail.com',
+//   uuid: '123abc',
+//   projectList: [
+//     {
+//       name: 'Battleship',
+//       completeStatus: false,
+//       backlog: [
+//         "Drag and Drop Logic for Pieces",
+//         "Rotate Pieces",
+//       ],
+//       progress: [
+//         "Computer Logic"
+//       ],
+//       complete: [
+//         "Board",
+//         "Standard Pieces",
+//         "Connect to Geo API",
+//         "Connect to Places API",
+//         "Create Authentification with Firebase",
+//         "Connect to Geo API",
+//         "Connect to Places API",
+//         "Create Authentification with Firebase",
+//         "Connect to Geo API",
+//         "Connect to Places API",
+//         "Create Authentification with Firebase",
+//         "Connect to Geo API",
+//         "Connect to Places API",
+//         "Create Authentification with Firebase",
+//         "Connect to Geo API",
+//         "Connect to Places API",
+//         "Create Authentification with Firebase",
+//         "Connect to Geo API",
+//         "Connect to Places API",
+//         "Create Authentification with Firebase",
+//         "Connect to Geo API",
+//         "Connect to Places API",
+//         "Create Authentification with Firebase",
+//         "Connect to Geo API",
+//         "Connect to Places API",
+//         "Create Authentification with Firebase",
+//         "Connect to Geo API",
+//         "Connect to Places API",
+//       ],
+//       onHold: [
+//         "Intermediate Computer",
+//         "Advanced Computer"
+//       ]
+//     },
+//     {
+//       name: 'WhatsForLinner',
+//       completeStatus: false,
+//       backlog: [
+//         "Create Favorites Folder"
+//       ],
+//       progress: [
+//         "Create Authentification with Firebase",
+//         "Connect to Geo API",
+//         "Connect to Places API",
+//         "Create Authentification with Firebase",
+//       ],
+//       complete: [
+//         "Button Container",
+//         "What to eat logic"
+//       ],
+//       onHold: [
+//         "Sharing Restaurant List"
+//       ]
+//     }
+//   ]
+// }
 
 interface columnList {
   "backlog": string,
@@ -86,6 +86,52 @@ const columnTitles: columnList = {
   "on-hold": "On-Hold"
 }
 
+const selectedProject = {
+  name: 'Battleship',
+  completeStatus: false,
+  backlog: [
+    "Drag and Drop Logic for Pieces",
+    "Rotate Pieces",
+  ],
+  progress: [
+    "Computer Logic"
+  ],
+  complete: [
+    "Board",
+    "Standard Pieces",
+    "Connect to Geo API",
+    "Connect to Places API",
+    "Create Authentification with Firebase",
+    "Connect to Geo API",
+    "Connect to Places API",
+    "Create Authentification with Firebase",
+    "Connect to Geo API",
+    "Connect to Places API",
+    "Create Authentification with Firebase",
+    "Connect to Geo API",
+    "Connect to Places API",
+    "Create Authentification with Firebase",
+    "Connect to Geo API",
+    "Connect to Places API",
+    "Create Authentification with Firebase",
+    "Connect to Geo API",
+    "Connect to Places API",
+    "Create Authentification with Firebase",
+    "Connect to Geo API",
+    "Connect to Places API",
+    "Create Authentification with Firebase",
+    "Connect to Geo API",
+    "Connect to Places API",
+    "Create Authentification with Firebase",
+    "Connect to Geo API",
+    "Connect to Places API",
+  ],
+  onHold: [
+    "Intermediate Computer",
+    "Advanced Computer"
+  ]
+}
+
 export const ProjectTracker = () => {
   const [newInputVisibility, setNewInputVisibility] = useState(false);
   const [newTask, setNewTask] = useState<string | undefined>('');
@@ -94,16 +140,16 @@ export const ProjectTracker = () => {
     let columnTasks: string[] = [];
     switch (columnName) {
       case 'backlog':
-        columnTasks = mockData.projectList[0].backlog;
+        columnTasks = selectedProject.backlog;
         break;
       case 'progress':
-        columnTasks = mockData.projectList[0].progress;
+        columnTasks = selectedProject.progress;
         break;
       case 'complete':
-        columnTasks = mockData.projectList[0].complete;
+        columnTasks = selectedProject.complete;
         break;
-      case `on-hold`:
-        columnTasks = mockData.projectList[0].onHold;
+      case 'on-hold':
+        columnTasks = selectedProject.onHold;
         break;
     }
 
@@ -116,26 +162,54 @@ export const ProjectTracker = () => {
           {createTaskList(columnTasks)}
         </div>
         {newInputVisibility ?
-          <div className="new-input-container">
-            <textarea
-              className="new-input"
-              value={newTask} onChange={e => setNewTask(e.target.value)}
-            />
-          </div>
+          <>
+            <div className="new-input-container">
+              <textarea
+                className="new-input"
+                value={newTask} onChange={e => setNewTask(e.target.value)}
+              />
+            </div>
+            <div className="save-btn-group">
+              <div className="save-btn" onClick={() => {
+                setNewTask('')
+                setNewInputVisibility(false)
+              }}>
+                <span>Close</span>
+              </div>
+              <div className="save-btn" onClick={() => {
+                setNewInputVisibility(false)
+                if (newTask) addTask(newTask, columnName)
+                setNewTask('')
+              }}>
+                <span>Save Item</span>
+              </div>
+            </div>
+          </>
           :
-          null
-        }
-        <div className="add-btn-group">
           <div className="add-btn" onClick={() => setNewInputVisibility(true)}>
             <span className="plus-sign">+</span>
             <span>Add Item</span>
           </div>
-          <div className="add-btn solid" onClick={() => setNewInputVisibility(false)}>
-            <span>Save Item</span>
-          </div>
-        </div>
+        }
       </li>
     )
+  }
+
+  const addTask = <C extends keyof columnList>(task: string, column: C) => {
+    switch (column) {
+      case 'backlog':
+        selectedProject.backlog.push(task);
+        break;
+      case 'progress':
+        selectedProject.progress.push(task);
+        break;
+      case 'complete':
+        selectedProject.complete.push(task);
+        break;
+      case 'on-hold':
+        selectedProject.onHold.push(task);
+        break;
+    }
   }
 
   const createTaskList = (taskArray: string[]) => {
@@ -146,7 +220,7 @@ export const ProjectTracker = () => {
 
   return (
     <>
-      <h1>{mockData.projectList[0].name}</h1>
+      <h1>{selectedProject.name}</h1>
       <div className="project-tracker-container">
         <ul className="project-list">
           {createColumn("backlog")}
