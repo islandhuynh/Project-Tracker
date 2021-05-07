@@ -5,10 +5,29 @@
   --column-4: #a22d22;
 }
 
+h1 {
+  letter-spacing: 2px;
+  text-shadow: 2px 2px 5px black;
+}
+
+.main-title {
+  text-align: center;
+  font-size: 3rem;
+}
+
 ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
+}
+
+.project-tracker-container {
+  margin: 20px;
+}
+
+.project-list {
+  display: flex;
+  align-items: flex-start;
 }
 
 .App {
@@ -41,6 +60,18 @@ ul {
   color: #61dafb;
 }
 
+/* Columns */
+.project-column {
+  flex: 1;
+  margin: 0 10px;
+  position: relative;
+  color: whitesmoke;
+  background-color: rgba(0, 0, 0, 0.35);
+  border-radius: 10px;
+  overflow-x: hidden;
+}
+
+
 .backlog-column .header,
 .backlog-column .solid,
 .backlog-column .solid:hover,
@@ -71,6 +102,7 @@ ul {
 
 .header h1 {
   font-size: 1.25rem;
+  color: white;
 }
 
 .header {
@@ -80,26 +112,31 @@ ul {
   margin: 10px;
 }
 
-.project-column {
-  flex: 1;
-  margin: 0 10px;
-  position: relative;
-  background-color: rgba(0, 0, 0, 0.35);
+/* Drag and Drop */
+.over {
+  padding: 50px 10px;
+}
+
+.task-item-list {
+  min-height: 50px;
+}
+
+.task-item {
+  margin: 10px;
+  padding: 10px;
+  height: fit-content;
+  background-color: rgba(0, 0, 0, 0.8);
   border-radius: 10px;
-  overflow-x: hidden;
+  line-height: 1.5rem;
+  letter-spacing: 1px;
+  cursor: pointer;
 }
 
-.project-list {
-  display: flex;
-  align-items: flex-start;
+.task-item:focus {
+  outline: none;
+  background-color: white;
+  color: black;
 }
-
-.project-tracker-container {
-  margin: 20px
-}
-
-
-
 
 @keyframes App-logo-spin {
   from {
