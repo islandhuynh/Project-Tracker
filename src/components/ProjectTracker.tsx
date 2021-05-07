@@ -132,23 +132,31 @@ const selectedProject = {
   ]
 }
 
+enum columnSelection {
+  BACKLOG = 'backlog',
+  PROGRESS = 'progress',
+  COMPLETE = 'complete',
+  ON_HOLD = 'on-hold'
+}
+
 export const ProjectTracker = () => {
   const [newInputVisibility, setNewInputVisibility] = useState(false);
   const [newTask, setNewTask] = useState<string | undefined>('');
+  const [selectedColumn, setSelectedColumn] = useState<keyof columnList | undefined>(undefined);
 
   const createColumn = <C extends keyof columnList>(columnName: C): JSX.Element => {
     let columnTasks: string[] = [];
     switch (columnName) {
-      case 'backlog':
+      case columnSelection.BACKLOG:
         columnTasks = selectedProject.backlog;
         break;
-      case 'progress':
+      case columnSelection.PROGRESS:
         columnTasks = selectedProject.progress;
         break;
-      case 'complete':
+      case columnSelection.COMPLETE:
         columnTasks = selectedProject.complete;
         break;
-      case 'on-hold':
+      case columnSelection.ON_HOLD:
         columnTasks = selectedProject.onHold;
         break;
     }
@@ -161,7 +169,7 @@ export const ProjectTracker = () => {
         <div id={`${columnName}-content`} className="custom-scroll">
           {createTaskList(columnTasks)}
         </div>
-        {newInputVisibility ?
+        {newInputVisibility && selectedColumn === columnName ?
           <>
             <div className="new-input-container">
               <textarea
@@ -186,7 +194,10 @@ export const ProjectTracker = () => {
             </div>
           </>
           :
-          <div className="add-btn" onClick={() => setNewInputVisibility(true)}>
+          <div className="add-btn" onClick={() => {
+            setSelectedColumn(columnName)
+            setNewInputVisibility(true)
+          }}>
             <span className="plus-sign">+</span>
             <span>Add Item</span>
           </div>
@@ -197,16 +208,16 @@ export const ProjectTracker = () => {
 
   const addTask = <C extends keyof columnList>(task: string, column: C) => {
     switch (column) {
-      case 'backlog':
+      case columnSelection.BACKLOG:
         selectedProject.backlog.push(task);
         break;
-      case 'progress':
+      case columnSelection.PROGRESS:
         selectedProject.progress.push(task);
         break;
-      case 'complete':
+      case columnSelection.COMPLETE:
         selectedProject.complete.push(task);
         break;
-      case 'on-hold':
+      case columnSelection.ON_HOLD:
         selectedProject.onHold.push(task);
         break;
     }
@@ -223,10 +234,10 @@ export const ProjectTracker = () => {
       <h1>{selectedProject.name}</h1>
       <div className="project-tracker-container">
         <ul className="project-list">
-          {createColumn("backlog")}
-          {createColumn("progress")}
-          {createColumn("complete")}
-          {createColumn("on-hold")}
+          {createColumn(columnSelection.BACKLOG)}
+          {createColumn(columnSelection.PROGRESS)}
+          {createColumn(columnSelection.COMPLETE)}
+          {createColumn(columnSelection.ON_HOLD)}
         </ul>
       </div>
     </>
