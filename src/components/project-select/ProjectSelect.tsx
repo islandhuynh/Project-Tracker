@@ -215,7 +215,7 @@ const mockData = {
 
 const emptyProject = {
   name: '',
-  completedState: true,
+  completusState: true,
   backlog: [],
   progress: [],
   complete: [],
@@ -238,6 +238,9 @@ export const ProjectSelect = () => {
   const [addProjectVisibility, setAddProjectVisibility] = useState(false);
   const [isCompletedColumn, setIsCompletedColumn] = useState(false);
   const [newProjectName, setNewProjectName] = useState('');
+  const [editProjectName, setEditProjectName] = useState('');
+  const [editProjectIndex, setEditProjectIndex] = useState(-1);
+  const [editProjectVisibility, setEditProjectVisibility] = useState(false);
 
   const addProject = (projectName: string, isCompleted: boolean) => {
     mockData.projectList.push({
@@ -248,6 +251,24 @@ export const ProjectSelect = () => {
       complete: [],
       onHold: []
     })
+  }
+
+  const editProject = (project: ProjectDetail, status: boolean) => {
+    const index = mockData.projectList.indexOf(project);
+    const newProject = {
+      name: editProjectName,
+      completeStatus: status,
+      backlog: [],
+      progress: [],
+      complete: [],
+      onHold: []
+    }
+    mockData.projectList[index] = newProject;
+  }
+
+  const removeProject = (project: ProjectDetail) => {
+    const index = mockData.projectList.indexOf(project);
+    if (index > -1) mockData.projectList.splice(index, 1);
   }
 
   return (
@@ -265,16 +286,48 @@ export const ProjectSelect = () => {
                   <h1>In-Progress</h1>
                 </span>
                 <div id="progress-content" className="custom-scroll">
-                  {mockData.projectList.map((project) => {
-                    if (!project.completeStatus) {
+                  {mockData.projectList.map((project, index) => {
+                    if (!project.completeStatus && editProjectIndex === index && editProjectVisibility) {
+                      return <>
+                        <div className="new-input-container">
+                          <textarea
+                            className="new-input"
+                            value={editProjectName}
+                            onChange={e => setEditProjectName(e.target.value)}
+                          />
+                        </div>
+                        <div className="save-btn-group">
+                          <div className="save-btn" onClick={() => {
+                            setEditProjectVisibility(false)
+                            setEditProjectName('')
+                          }}>
+                            <span>Close</span>
+                          </div>
+                          <div className="save-btn" onClick={() => {
+                            editProject(project, false)
+                            setEditProjectVisibility(false)
+                            setNewProjectName('')
+                          }}>
+                            <span>Save Item</span>
+                          </div>
+                        </div>
+                      </>
+                    } else if (!project.completeStatus) {
                       return (
-                        <li className="project-item" draggable={true} onClick={() => setSelectedProject(project)}>
+                        <li className="project-item" draggable={true} key={index}>
                           <div className="task-container">
                             <div className="edit-button-container">
-                              <FontAwesomeIcon icon={faEdit} />
-                              <FontAwesomeIcon icon={faTimes} />
+                              <FontAwesomeIcon
+                                icon={faEdit}
+                                onClick={() => {
+                                  setEditProjectIndex(index)
+                                  setEditProjectName(project.name)
+                                  setEditProjectVisibility(true)
+                                }}
+                              />
+                              <FontAwesomeIcon icon={faTimes} onClick={() => removeProject(project)} />
                             </div>
-                            {project.name}
+                            <p className="project-text" onClick={() => setSelectedProject(project)}>{project.name}</p>
                           </div>
                         </li>
                       )
@@ -322,16 +375,48 @@ export const ProjectSelect = () => {
                   <h1>Completed</h1>
                 </span>
                 <div id="progress-content" className="custom-scroll">
-                  {mockData.projectList.map((project) => {
-                    if (project.completeStatus) {
+                  {mockData.projectList.map((project, index) => {
+                    if (project.completeStatus && editProjectIndex === index && editProjectVisibility) {
+                      return <>
+                        <div className="new-input-container">
+                          <textarea
+                            className="new-input"
+                            value={editProjectName}
+                            onChange={e => setEditProjectName(e.target.value)}
+                          />
+                        </div>
+                        <div className="save-btn-group">
+                          <div className="save-btn" onClick={() => {
+                            setEditProjectVisibility(false)
+                            setEditProjectName('')
+                          }}>
+                            <span>Close</span>
+                          </div>
+                          <div className="save-btn" onClick={() => {
+                            editProject(project, true)
+                            setEditProjectVisibility(false)
+                            setNewProjectName('')
+                          }}>
+                            <span>Save Item</span>
+                          </div>
+                        </div>
+                      </>
+                    } else if (project.completeStatus) {
                       return (
-                        <li className="project-item" draggable={true} onClick={() => setSelectedProject(project)}>
+                        <li className="project-item" draggable={true} key={index}>
                           <div className="task-container">
                             <div className="edit-button-container">
-                              <FontAwesomeIcon icon={faEdit} />
-                              <FontAwesomeIcon icon={faTimes} />
+                              <FontAwesomeIcon
+                                icon={faEdit}
+                                onClick={() => {
+                                  setEditProjectIndex(index)
+                                  setEditProjectName(project.name)
+                                  setEditProjectVisibility(true)
+                                }}
+                              />
+                              <FontAwesomeIcon icon={faTimes} onClick={() => removeProject(project)} />
                             </div>
-                            {project.name}
+                            <p className="project-text" onClick={() => setSelectedProject(project)}>{project.name}</p>
                           </div>
                         </li>
                       )

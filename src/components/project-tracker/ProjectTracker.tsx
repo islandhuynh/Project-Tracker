@@ -17,26 +17,6 @@ const columnTitles: columnList = {
   "on-hold": "On-Hold"
 }
 
-// const selectedProject = {
-//   name: 'Battleship',
-//   completeStatus: false,
-//   backlog: [
-//     "Drag and Drop Logic for Pieces",
-//     "Rotate Pieces",
-//   ],
-//   progress: [
-//     "Computer Logic"
-//   ],
-//   complete: [
-//     "Board",
-//     "Standard Pieces",
-//   ],
-//   onHold: [
-//     "Intermediate Computer",
-//     "Advanced Computer"
-//   ]
-// }
-
 interface ProjectDetail {
   name: string,
   completeStatus: boolean,
