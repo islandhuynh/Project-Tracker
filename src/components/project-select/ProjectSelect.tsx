@@ -150,66 +150,6 @@ const mockData = {
         "Sharing Restaurant List"
       ]
     },
-    {
-      name: 'WhatsForLinner',
-      completeStatus: true,
-      backlog: [
-        "Create Favorites Folder"
-      ],
-      progress: [
-        "Create Authentification with Firebase",
-        "Connect to Geo API",
-        "Connect to Places API",
-        "Create Authentification with Firebase",
-      ],
-      complete: [
-        "Button Container",
-        "What to eat logic"
-      ],
-      onHold: [
-        "Sharing Restaurant List"
-      ]
-    },
-    {
-      name: 'WhatsForLinner',
-      completeStatus: true,
-      backlog: [
-        "Create Favorites Folder"
-      ],
-      progress: [
-        "Create Authentification with Firebase",
-        "Connect to Geo API",
-        "Connect to Places API",
-        "Create Authentification with Firebase",
-      ],
-      complete: [
-        "Button Container",
-        "What to eat logic"
-      ],
-      onHold: [
-        "Sharing Restaurant List"
-      ]
-    },
-    {
-      name: 'WhatsForLinner',
-      completeStatus: true,
-      backlog: [
-        "Create Favorites Folder"
-      ],
-      progress: [
-        "Create Authentification with Firebase",
-        "Connect to Geo API",
-        "Connect to Places API",
-        "Create Authentification with Firebase",
-      ],
-      complete: [
-        "Button Container",
-        "What to eat logic"
-      ],
-      onHold: [
-        "Sharing Restaurant List"
-      ]
-    }
   ]
 }
 
@@ -241,6 +181,7 @@ export const ProjectSelect = () => {
   const [editProjectName, setEditProjectName] = useState('');
   const [editProjectIndex, setEditProjectIndex] = useState(-1);
   const [editProjectVisibility, setEditProjectVisibility] = useState(false);
+  const [draggedProject, setDraggedProject] = useState<ProjectDetail | undefined>(undefined)
 
   const addProject = (projectName: string, isCompleted: boolean) => {
     mockData.projectList.push({
@@ -271,6 +212,12 @@ export const ProjectSelect = () => {
     if (index > -1) mockData.projectList.splice(index, 1);
   }
 
+  const projectDrop = (project: ProjectDetail, status: boolean) => {
+    const index = mockData.projectList.indexOf(project);
+    mockData.projectList[index].completeStatus = status;
+    setDraggedProject(undefined);
+  }
+
   return (
     <>
       {selectedProject ?
@@ -281,7 +228,11 @@ export const ProjectSelect = () => {
           <button onClick={() => logout()}>Signout</button>
           <div className="project-tracker-container">
             <ul className="project-list">
-              <li className="project-column progress-column">
+              <li
+                className="project-column complete-column"
+                onDragOver={e => e.preventDefault()}
+                onDrop={() => { if (draggedProject) projectDrop(draggedProject, false) }}
+              >
                 <span className="header">
                   <h1>In-Progress</h1>
                 </span>
@@ -314,7 +265,12 @@ export const ProjectSelect = () => {
                       </>
                     } else if (!project.completeStatus) {
                       return (
-                        <li className="project-item" draggable={true} key={index}>
+                        <li
+                          className="project-item"
+                          draggable={true}
+                          key={index}
+                          onDragStart={() => setDraggedProject(project)}
+                        >
                           <div className="task-container">
                             <div className="edit-button-container">
                               <FontAwesomeIcon
@@ -370,7 +326,11 @@ export const ProjectSelect = () => {
                   </div>
                 }
               </li>
-              <li className="project-column complete-column">
+              <li
+                className="project-column complete-column"
+                onDragOver={e => e.preventDefault()}
+                onDrop={() => { if (draggedProject) projectDrop(draggedProject, true) }}
+              >
                 <span className="header">
                   <h1>Completed</h1>
                 </span>
@@ -403,7 +363,11 @@ export const ProjectSelect = () => {
                       </>
                     } else if (project.completeStatus) {
                       return (
-                        <li className="project-item" draggable={true} key={index}>
+                        <li
+                          className="project-item"
+                          draggable={true} key={index}
+                          onDragStart={() => setDraggedProject(project)}
+                        >
                           <div className="task-container">
                             <div className="edit-button-container">
                               <FontAwesomeIcon
