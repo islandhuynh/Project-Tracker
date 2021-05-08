@@ -234,7 +234,7 @@ interface ProjectDetail {
 export const ProjectSelect = () => {
   const { user, logout } = useContext(AuthContext);
 
-  const [selectedProject, setSelectedProject] = useState<string | undefined>('');
+  const [selectedProject, setSelectedProject] = useState<ProjectDetail | undefined>(undefined);
   const [addProjectVisibility, setAddProjectVisibility] = useState(false);
   const [isCompletedColumn, setIsCompletedColumn] = useState(false);
   const [newProjectName, setNewProjectName] = useState('');
@@ -253,7 +253,7 @@ export const ProjectSelect = () => {
   return (
     <>
       {selectedProject ?
-        <ProjectTracker selectProject={selectedProject} setSelectProject={setSelectedProject} />
+        <ProjectTracker selectedProject={selectedProject} setSelectedProject={setSelectedProject} />
         :
         <>
           <h1>Welcome {user.displayName}, these are your projects:</h1>
@@ -268,7 +268,7 @@ export const ProjectSelect = () => {
                   {mockData.projectList.map((project) => {
                     if (!project.completeStatus) {
                       return (
-                        <li className="project-item" draggable={true} onClick={() => setSelectedProject('Battleship')}>
+                        <li className="project-item" draggable={true} onClick={() => setSelectedProject(project)}>
                           <div className="task-container">
                             <div className="edit-button-container">
                               <FontAwesomeIcon icon={faEdit} />
@@ -325,7 +325,7 @@ export const ProjectSelect = () => {
                   {mockData.projectList.map((project) => {
                     if (project.completeStatus) {
                       return (
-                        <li className="project-item" draggable={true} onClick={() => setSelectedProject('Battleship')}>
+                        <li className="project-item" draggable={true} onClick={() => setSelectedProject(project)}>
                           <div className="task-container">
                             <div className="edit-button-container">
                               <FontAwesomeIcon icon={faEdit} />

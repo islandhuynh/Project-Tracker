@@ -17,24 +17,33 @@ const columnTitles: columnList = {
   "on-hold": "On-Hold"
 }
 
-const selectedProject = {
-  name: 'Battleship',
-  completeStatus: false,
-  backlog: [
-    "Drag and Drop Logic for Pieces",
-    "Rotate Pieces",
-  ],
-  progress: [
-    "Computer Logic"
-  ],
-  complete: [
-    "Board",
-    "Standard Pieces",
-  ],
-  onHold: [
-    "Intermediate Computer",
-    "Advanced Computer"
-  ]
+// const selectedProject = {
+//   name: 'Battleship',
+//   completeStatus: false,
+//   backlog: [
+//     "Drag and Drop Logic for Pieces",
+//     "Rotate Pieces",
+//   ],
+//   progress: [
+//     "Computer Logic"
+//   ],
+//   complete: [
+//     "Board",
+//     "Standard Pieces",
+//   ],
+//   onHold: [
+//     "Intermediate Computer",
+//     "Advanced Computer"
+//   ]
+// }
+
+interface ProjectDetail {
+  name: string,
+  completeStatus: boolean,
+  backlog: string[],
+  progress: string[],
+  complete: string[],
+  onHold: string[]
 }
 
 enum columnSelection {
@@ -45,11 +54,11 @@ enum columnSelection {
 }
 
 interface ProjectProps {
-  selectProject: string,
-  setSelectProject: Dispatch<React.SetStateAction<string | undefined>>
+  selectedProject: ProjectDetail,
+  setSelectedProject: Dispatch<React.SetStateAction<ProjectDetail | undefined>>
 }
 
-export const ProjectTracker: FC<ProjectProps> = ({ selectProject, setSelectProject }) => {
+export const ProjectTracker: FC<ProjectProps> = ({ selectedProject, setSelectedProject }) => {
   const [newInputVisibility, setNewInputVisibility] = useState(false);
   const [newTask, setNewTask] = useState<string | undefined>('');
   const [selectedColumn, setSelectedColumn] = useState<keyof columnList | undefined>(undefined);
@@ -233,7 +242,7 @@ export const ProjectTracker: FC<ProjectProps> = ({ selectProject, setSelectProje
 
   return (
     <>
-      <button onClick={() => setSelectProject(undefined)}>return</button>
+      <button onClick={() => setSelectedProject(undefined)}>return</button>
       <h1>{selectedProject.name}</h1>
       <div className="project-tracker-container">
         <ul className="project-list">
