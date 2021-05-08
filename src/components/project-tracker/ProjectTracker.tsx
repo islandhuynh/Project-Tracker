@@ -3,79 +3,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit } from '@fortawesome/free-regular-svg-icons'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 
-
-// const mockData = {
-//   email: 'islandhuynh@gmail.com',
-//   uuid: '123abc',
-//   projectList: [
-//     {
-//       name: 'Battleship',
-//       completeStatus: false,
-//       backlog: [
-//         "Drag and Drop Logic for Pieces",
-//         "Rotate Pieces",
-//       ],
-//       progress: [
-//         "Computer Logic"
-//       ],
-//       complete: [
-//         "Board",
-//         "Standard Pieces",
-//         "Connect to Geo API",
-//         "Connect to Places API",
-//         "Create Authentification with Firebase",
-//         "Connect to Geo API",
-//         "Connect to Places API",
-//         "Create Authentification with Firebase",
-//         "Connect to Geo API",
-//         "Connect to Places API",
-//         "Create Authentification with Firebase",
-//         "Connect to Geo API",
-//         "Connect to Places API",
-//         "Create Authentification with Firebase",
-//         "Connect to Geo API",
-//         "Connect to Places API",
-//         "Create Authentification with Firebase",
-//         "Connect to Geo API",
-//         "Connect to Places API",
-//         "Create Authentification with Firebase",
-//         "Connect to Geo API",
-//         "Connect to Places API",
-//         "Create Authentification with Firebase",
-//         "Connect to Geo API",
-//         "Connect to Places API",
-//         "Create Authentification with Firebase",
-//         "Connect to Geo API",
-//         "Connect to Places API",
-//       ],
-//       onHold: [
-//         "Intermediate Computer",
-//         "Advanced Computer"
-//       ]
-//     },
-//     {
-//       name: 'WhatsForLinner',
-//       completeStatus: false,
-//       backlog: [
-//         "Create Favorites Folder"
-//       ],
-//       progress: [
-//         "Create Authentification with Firebase",
-//         "Connect to Geo API",
-//         "Connect to Places API",
-//         "Create Authentification with Firebase",
-//       ],
-//       complete: [
-//         "Button Container",
-//         "What to eat logic"
-//       ],
-//       onHold: [
-//         "Sharing Restaurant List"
-//       ]
-//     }
-//   ]
-// }
-
 interface columnList {
   "backlog": string,
   "progress": string,
@@ -297,7 +224,6 @@ export const ProjectTracker = () => {
         selectedProject.onHold[index] = editTask;
         break;
     }
-    setEditVisibility(false);
   }
 
   return (
