@@ -71,7 +71,6 @@ ul {
   overflow-x: hidden;
 }
 
-
 .backlog-column .header,
 .backlog-column .solid,
 .backlog-column .solid:hover,
@@ -166,20 +165,17 @@ ul {
   flex: 1;
 }
 
-.task-text {
-  flex: 3
-}
-
-.edit-icons {
-  flex: 1
-}
-
 .edit-input {
   width: 93%;
   border-radius: 5px;
   background-color: whitesmoke;
   text-align: center;
   font-size: 1rem;
+}
+
+.edit-button-container {
+  display: flex;
+  justify-content: space-between;
 }
 
 /* Add Button Group */

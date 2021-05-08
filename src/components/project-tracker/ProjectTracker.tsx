@@ -264,14 +264,16 @@ export const ProjectTracker = () => {
             }}
           >
             <div className="task-container">
+              <div className="edit-button-container">
+                <FontAwesomeIcon icon={faEdit} onClick={() => {
+                  setSelectedColumn(column)
+                  setTaskIndex(index)
+                  setEditTask(task)
+                  setEditVisibility(true)
+                }} />
+                <FontAwesomeIcon icon={faTimes} onClick={() => removeTask(task, column)} />
+              </div>
               {task}
-              <FontAwesomeIcon icon={faEdit} className="edit-icons" onClick={() => {
-                setSelectedColumn(column)
-                setTaskIndex(index)
-                setEditTask(task)
-                setEditVisibility(true)
-              }} />
-              <FontAwesomeIcon icon={faTimes} className="edit-icons" onClick={() => removeTask(task, column)} />
             </div>
           </li>
         }
