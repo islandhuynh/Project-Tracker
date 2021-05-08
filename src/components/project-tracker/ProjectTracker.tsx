@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, FC, Dispatch } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit } from '@fortawesome/free-regular-svg-icons'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
@@ -44,7 +44,12 @@ enum columnSelection {
   ON_HOLD = 'on-hold'
 }
 
-export const ProjectTracker = () => {
+interface ProjectProps {
+  selectProject: string,
+  setSelectProject: Dispatch<React.SetStateAction<string | undefined>>
+}
+
+export const ProjectTracker: FC<ProjectProps> = ({ selectProject, setSelectProject }) => {
   const [newInputVisibility, setNewInputVisibility] = useState(false);
   const [newTask, setNewTask] = useState<string | undefined>('');
   const [selectedColumn, setSelectedColumn] = useState<keyof columnList | undefined>(undefined);
@@ -228,6 +233,7 @@ export const ProjectTracker = () => {
 
   return (
     <>
+      <button onClick={() => setSelectProject(undefined)}>return</button>
       <h1>{selectedProject.name}</h1>
       <div className="project-tracker-container">
         <ul className="project-list">

@@ -1,5 +1,5 @@
 import firebase from 'firebase/app';
-import React, { createContext, useState } from 'react';
+import { createContext, useState } from 'react';
 
 import 'firebase/auth';
 import 'firebase/database';
@@ -28,13 +28,19 @@ export const FirebaseAuthProvider = ({ children }: any) => {
       })
   }
 
+  const logout = async () => {
+    await firebase.auth().signOut();
+    setUser(null);
+  }
+
   initFirebase();
 
   return (
     <AuthContext.Provider value={{
       user,
       setUser,
-      login
+      login,
+      logout
     }}>
       { children}
     </AuthContext.Provider>

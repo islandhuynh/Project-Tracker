@@ -1,6 +1,6 @@
 import './App.css';
 
-import React, { useState, useContext } from 'react';
+import { useContext } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { ProjectSelect } from './components/project-select/ProjectSelect';
 import { Auth } from './components/authentication/Auth';
