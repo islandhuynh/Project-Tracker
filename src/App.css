@@ -161,6 +161,27 @@ ul {
   color: black;
 }
 
+.task-container {
+  flex-direction: row;
+  flex: 1;
+}
+
+.task-text {
+  flex: 3
+}
+
+.edit-icons {
+  flex: 1
+}
+
+.edit-input {
+  width: 93%;
+  border-radius: 5px;
+  background-color: whitesmoke;
+  text-align: center;
+  font-size: 1rem;
+}
+
 /* Add Button Group */
 .add-btn {
   margin: 10px;

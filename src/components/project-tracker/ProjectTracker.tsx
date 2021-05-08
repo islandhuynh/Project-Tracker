@@ -1,4 +1,8 @@
 import React, { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEdit } from '@fortawesome/free-regular-svg-icons'
+import { faTimes } from '@fortawesome/free-solid-svg-icons'
+
 
 // const mockData = {
 //   email: 'islandhuynh@gmail.com',
@@ -119,6 +123,9 @@ export const ProjectTracker = () => {
   const [selectedColumn, setSelectedColumn] = useState<keyof columnList | undefined>(undefined);
   const [draggedTask, setDraggedTask] = useState<string | undefined>(undefined);
   const [removedItemColumn, setRemovedItemColumn] = useState<keyof columnList | undefined>(undefined);
+  const [editTask, setEditTask] = useState<string>('');
+  const [editVisibility, setEditVisibility] = useState(false);
+  const [taskIndex, setTaskIndex] = useState(-1);
 
   const createColumn = <C extends keyof columnList>(columnName: C): JSX.Element => {
     let columnTasks: string[] = [];
@@ -211,7 +218,6 @@ export const ProjectTracker = () => {
 
   const removeTask = <C extends keyof columnList>(task: string, column: C) => {
     let index = -1;
-
     switch (column) {
       case columnSelection.BACKLOG:
         index = selectedProject.backlog.indexOf(task);
@@ -232,22 +238,64 @@ export const ProjectTracker = () => {
     }
   }
 
-
   const createTaskList = <C extends keyof columnList>(taskArray: string[], column: C) => {
     let listArray: JSX.Element[] = [];
-    taskArray.forEach(task => listArray.push(
-      <li
-        className="task-item"
-        draggable={true}
-        onDragStart={() => {
-          setDraggedTask(task)
-          setRemovedItemColumn(column)
-        }}
-      >
-        {task}
-      </li>
+    taskArray.forEach((task, index) => listArray.push(
+      <>
+        {editVisibility && selectedColumn === column && taskIndex === index ?
+          <>
+            <textarea className="edit-input" value={editTask} onChange={e => setEditTask(e.target.value)} />
+            <div className="save-btn-group">
+              <div className="save-btn" onClick={() => setEditVisibility(false)}>
+                <span>Close</span>
+              </div>
+              <div className="save-btn" onClick={() => saveEdit(column, index)}>
+                <span>Save Item</span>
+              </div>
+            </div>
+          </>
+          :
+          <li
+            className="task-item"
+            draggable={true}
+            onDragStart={() => {
+              setDraggedTask(task)
+              setRemovedItemColumn(column)
+            }}
+          >
+            <div className="task-container">
+              {task}
+              <FontAwesomeIcon icon={faEdit} className="edit-icons" onClick={() => {
+                setSelectedColumn(column)
+                setTaskIndex(index)
+                setEditTask(task)
+                setEditVisibility(true)
+              }} />
+              <FontAwesomeIcon icon={faTimes} className="edit-icons" onClick={() => removeTask(task, column)} />
+            </div>
+          </li>
+        }
+      </>
     ));
     return listArray;
+  }
+
+  const saveEdit = <C extends keyof columnList>(columnName: C, index: number) => {
+    switch (columnName) {
+      case columnSelection.BACKLOG:
+        selectedProject.backlog[index] = editTask;
+        break;
+      case columnSelection.PROGRESS:
+        selectedProject.progress[index] = editTask;
+        break;
+      case columnSelection.COMPLETE:
+        selectedProject.complete[index] = editTask;
+        break;
+      case columnSelection.ON_HOLD:
+        selectedProject.onHold[index] = editTask;
+        break;
+    }
+    setEditVisibility(false);
   }
 
   return (
