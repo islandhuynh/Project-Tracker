@@ -213,6 +213,15 @@ const mockData = {
   ]
 }
 
+const emptyProject = {
+  name: '',
+  completedState: true,
+  backlog: [],
+  progress: [],
+  complete: [],
+  onHold: []
+}
+
 interface ProjectDetail {
   name: string,
   completeStatus: boolean,
@@ -226,6 +235,20 @@ export const ProjectSelect = () => {
   const { user, logout } = useContext(AuthContext);
 
   const [selectedProject, setSelectedProject] = useState<string | undefined>('');
+  const [addProjectVisibility, setAddProjectVisibility] = useState(false);
+  const [isCompletedColumn, setIsCompletedColumn] = useState(false);
+  const [newProjectName, setNewProjectName] = useState('');
+
+  const addProject = (projectName: string, isCompleted: boolean) => {
+    mockData.projectList.push({
+      name: projectName,
+      completeStatus: isCompleted,
+      backlog: [],
+      progress: [],
+      complete: [],
+      onHold: []
+    })
+  }
 
   return (
     <>
@@ -259,10 +282,40 @@ export const ProjectSelect = () => {
                     return null
                   })}
                 </div>
-                <div className="add-project-btn" >
-                  <span className="plus-sign">+</span>
-                  <span>Add Project</span>
-                </div>
+                {addProjectVisibility && !isCompletedColumn ?
+                  <>
+                    <div className="new-input-container">
+                      <textarea
+                        className="new-input"
+                        value={newProjectName}
+                        onChange={e => setNewProjectName(e.target.value)}
+                      />
+                    </div>
+                    <div className="save-btn-group">
+                      <div className="save-btn" onClick={() => {
+                        setAddProjectVisibility(false)
+                        setNewProjectName('')
+                      }}>
+                        <span>Close</span>
+                      </div>
+                      <div className="save-btn" onClick={() => {
+                        addProject(newProjectName, false)
+                        setAddProjectVisibility(false)
+                        setNewProjectName('')
+                      }}>
+                        <span>Save Item</span>
+                      </div>
+                    </div>
+                  </>
+                  :
+                  <div className="add-project-btn" onClick={() => {
+                    setAddProjectVisibility(true)
+                    setIsCompletedColumn(false)
+                  }}>
+                    <span className="plus-sign">+</span>
+                    <span>Add Project</span>
+                  </div>
+                }
               </li>
               <li className="project-column complete-column">
                 <span className="header">
@@ -286,10 +339,40 @@ export const ProjectSelect = () => {
                     return null
                   })}
                 </div>
-                <div className="add-project-btn">
-                  <span className="plus-sign">+</span>
-                  <span>Add Project</span>
-                </div>
+                {addProjectVisibility && isCompletedColumn ?
+                  <>
+                    <div className="new-input-container">
+                      <textarea
+                        className="new-input"
+                        value={newProjectName}
+                        onChange={e => setNewProjectName(e.target.value)}
+                      />
+                    </div>
+                    <div className="save-btn-group">
+                      <div className="save-btn" onClick={() => {
+                        setAddProjectVisibility(false)
+                        setNewProjectName('')
+                      }}>
+                        <span>Close</span>
+                      </div>
+                      <div className="save-btn" onClick={() => {
+                        addProject(newProjectName, true)
+                        setAddProjectVisibility(false)
+                        setNewProjectName('')
+                      }}>
+                        <span>Save Item</span>
+                      </div>
+                    </div>
+                  </>
+                  :
+                  <div className="add-project-btn" onClick={() => {
+                    setAddProjectVisibility(true)
+                    setIsCompletedColumn(true)
+                  }}>
+                    <span className="plus-sign">+</span>
+                    <span>Add Project</span>
+                  </div>
+                }
               </li>
             </ul>
           </div>

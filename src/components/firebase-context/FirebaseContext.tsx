@@ -22,6 +22,7 @@ export const FirebaseAuthProvider = ({ children }: any) => {
     await firebase.auth()
       .signInWithPopup(provider)
       .then((result) => {
+        console.log(result);
         setUser(result.user);
       }).catch((error) => {
         console.log(error)
