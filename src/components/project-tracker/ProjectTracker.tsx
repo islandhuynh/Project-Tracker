@@ -213,20 +213,33 @@ export const ProjectTracker: FC<ProjectProps> = ({ selectedProject, setSelectedP
   }
 
   const saveEdit = <C extends keyof columnList>(columnName: C, index: number) => {
+    let tempArray = [];
+    let tempProject = undefined;
     switch (columnName) {
       case columnSelection.BACKLOG:
-        selectedProject.backlog[index] = editTask;
+        tempArray = selectedProject.backlog;
+        tempArray[index] = editTask;
+        tempProject = { ...selectedProject, backlog: tempArray };
         break;
       case columnSelection.PROGRESS:
-        selectedProject.progress[index] = editTask;
+        tempArray = selectedProject.progress;
+        tempArray[index] = editTask;
+        tempProject = { ...selectedProject, progress: tempArray };
         break;
       case columnSelection.COMPLETE:
-        selectedProject.complete[index] = editTask;
+        tempArray = selectedProject.complete;
+        tempArray[index] = editTask;
+        tempProject = { ...selectedProject, complete: tempArray };
         break;
       case columnSelection.ON_HOLD:
-        selectedProject.onHold[index] = editTask;
+        tempArray = selectedProject.onHold;
+        tempArray[index] = editTask;
+        tempProject = { ...selectedProject, onHold: tempArray };
         break;
     }
+    setSelectedProject(tempProject);
+    updateProjectTasks(user.uid, projectIndex, tempProject);
+    setEditVisibility(false);
   }
 
   return (
