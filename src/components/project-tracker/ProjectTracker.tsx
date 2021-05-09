@@ -1,8 +1,10 @@
-import { useState, FC, Dispatch } from 'react';
+import { useState, useContext, FC, Dispatch } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit } from '@fortawesome/free-regular-svg-icons'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import Button from 'react-bootstrap/Button'
+import { ProjectDetail } from '../../schemas/projectDetail';
+import { AuthContext } from '../firebase-context/FirebaseContext';
 
 interface columnList {
   "backlog": string,
@@ -18,15 +20,6 @@ const columnTitles: columnList = {
   "on-hold": "On-Hold"
 }
 
-interface ProjectDetail {
-  name: string,
-  completeStatus: boolean,
-  backlog: string[],
-  progress: string[],
-  complete: string[],
-  onHold: string[]
-}
-
 enum columnSelection {
   BACKLOG = 'backlog',
   PROGRESS = 'progress',
@@ -36,10 +29,13 @@ enum columnSelection {
 
 interface ProjectProps {
   selectedProject: ProjectDetail,
-  setSelectedProject: Dispatch<React.SetStateAction<ProjectDetail | undefined>>
+  setSelectedProject: Dispatch<React.SetStateAction<ProjectDetail | undefined>>,
+  projectIndex: number,
 }
 
-export const ProjectTracker: FC<ProjectProps> = ({ selectedProject, setSelectedProject }) => {
+export const ProjectTracker: FC<ProjectProps> = ({ selectedProject, setSelectedProject, projectIndex }) => {
+  const { user, updateProjectTasks } = useContext(AuthContext);
+
   const [newInputVisibility, setNewInputVisibility] = useState(false);
   const [newTask, setNewTask] = useState<string | undefined>('');
   const [selectedColumn, setSelectedColumn] = useState<keyof columnList | undefined>(undefined);
@@ -48,6 +44,50 @@ export const ProjectTracker: FC<ProjectProps> = ({ selectedProject, setSelectedP
   const [editTask, setEditTask] = useState<string>('');
   const [editVisibility, setEditVisibility] = useState(false);
   const [taskIndex, setTaskIndex] = useState(-1);
+
+  const createTaskList = <C extends keyof columnList>(taskArray: string[], column: C) => {
+    let listArray: JSX.Element[] = [];
+    taskArray.forEach((task, index) => listArray.push(
+      <>
+        {editVisibility && selectedColumn === column && taskIndex === index ?
+          <>
+            <textarea className="edit-input" value={editTask} onChange={e => setEditTask(e.target.value)} />
+            <div className="save-btn-group">
+              <div className="save-btn" onClick={() => setEditVisibility(false)}>
+                <span>Close</span>
+              </div>
+              <div className="save-btn" onClick={() => saveEdit(column, index)}>
+                <span>Save Item</span>
+              </div>
+            </div>
+          </>
+          :
+          <li
+            className="task-item"
+            draggable={true}
+            onDragStart={() => {
+              setDraggedTask(task)
+              setRemovedItemColumn(column)
+            }}
+          >
+            <div className="task-container">
+              <div className="edit-button-container">
+                <FontAwesomeIcon icon={faEdit} onClick={() => {
+                  setSelectedColumn(column)
+                  setTaskIndex(index)
+                  setEditTask(task)
+                  setEditVisibility(true)
+                }} />
+                <FontAwesomeIcon icon={faTimes} onClick={() => removeTask(task, column)} />
+              </div>
+              {task}
+            </div>
+          </li>
+        }
+      </>
+    ));
+    return listArray;
+  }
 
   const createColumn = <C extends keyof columnList>(columnName: C): JSX.Element => {
     let columnTasks: string[] = [];
@@ -122,86 +162,54 @@ export const ProjectTracker: FC<ProjectProps> = ({ selectedProject, setSelectedP
   }
 
   const addTask = <C extends keyof columnList>(task: string, column: C) => {
+    let tempArray = [];
+    let tempProject = undefined;
+
     switch (column) {
       case columnSelection.BACKLOG:
-        selectedProject.backlog.push(task);
+        tempArray = [...selectedProject.backlog, task];
+        tempProject = { ...selectedProject, backlog: tempArray };
         break;
       case columnSelection.PROGRESS:
-        selectedProject.progress.push(task);
+        tempArray = [...selectedProject.progress, task];
+        tempProject = { ...selectedProject, progress: tempArray };
         break;
       case columnSelection.COMPLETE:
-        selectedProject.complete.push(task);
+        tempArray = [...selectedProject.complete, task];
+        tempProject = { ...selectedProject, complete: tempArray };
         break;
       case columnSelection.ON_HOLD:
-        selectedProject.onHold.push(task);
+        tempArray = [...selectedProject.onHold, task];
+        tempProject = { ...selectedProject, onHold: tempArray };
         break;
     }
+    setSelectedProject(tempProject);
+    updateProjectTasks(user.uid, projectIndex, tempProject);
   }
 
   const removeTask = <C extends keyof columnList>(task: string, column: C) => {
-    let index = -1;
+    let tempArray = [];
+    let tempProject = undefined;
     switch (column) {
       case columnSelection.BACKLOG:
-        index = selectedProject.backlog.indexOf(task);
-        if (index > -1) selectedProject.backlog.splice(index, 1);
+        tempArray = selectedProject.backlog.filter(projectTask => projectTask !== task)
+        tempProject = { ...selectedProject, backlog: tempArray };
         break;
       case columnSelection.PROGRESS:
-        index = selectedProject.progress.indexOf(task);
-        if (index > -1) selectedProject.progress.splice(index, 1);
+        tempArray = selectedProject.progress.filter(projectTask => projectTask !== task)
+        tempProject = { ...selectedProject, progress: tempArray };
         break;
       case columnSelection.COMPLETE:
-        index = selectedProject.complete.indexOf(task);
-        if (index > -1) selectedProject.complete.splice(index, 1);
+        tempArray = selectedProject.complete.filter(projectTask => projectTask !== task)
+        tempProject = { ...selectedProject, complete: tempArray };
         break;
       case columnSelection.ON_HOLD:
-        index = selectedProject.onHold.indexOf(task);
-        if (index > -1) selectedProject.onHold.splice(index, 1);
+        tempArray = selectedProject.onHold.filter(projectTask => projectTask !== task)
+        tempProject = { ...selectedProject, onHold: tempArray };
         break;
     }
-  }
-
-  const createTaskList = <C extends keyof columnList>(taskArray: string[], column: C) => {
-    let listArray: JSX.Element[] = [];
-    taskArray.forEach((task, index) => listArray.push(
-      <>
-        {editVisibility && selectedColumn === column && taskIndex === index ?
-          <>
-            <textarea className="edit-input" value={editTask} onChange={e => setEditTask(e.target.value)} />
-            <div className="save-btn-group">
-              <div className="save-btn" onClick={() => setEditVisibility(false)}>
-                <span>Close</span>
-              </div>
-              <div className="save-btn" onClick={() => saveEdit(column, index)}>
-                <span>Save Item</span>
-              </div>
-            </div>
-          </>
-          :
-          <li
-            className="task-item"
-            draggable={true}
-            onDragStart={() => {
-              setDraggedTask(task)
-              setRemovedItemColumn(column)
-            }}
-          >
-            <div className="task-container">
-              <div className="edit-button-container">
-                <FontAwesomeIcon icon={faEdit} onClick={() => {
-                  setSelectedColumn(column)
-                  setTaskIndex(index)
-                  setEditTask(task)
-                  setEditVisibility(true)
-                }} />
-                <FontAwesomeIcon icon={faTimes} onClick={() => removeTask(task, column)} />
-              </div>
-              {task}
-            </div>
-          </li>
-        }
-      </>
-    ));
-    return listArray;
+    setSelectedProject(tempProject);
+    updateProjectTasks(user.uid, projectIndex, tempProject);
   }
 
   const saveEdit = <C extends keyof columnList>(columnName: C, index: number) => {

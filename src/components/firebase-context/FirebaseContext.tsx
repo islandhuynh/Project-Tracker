@@ -67,6 +67,12 @@ export const FirebaseAuthProvider = ({ children }: any) => {
     setProjectList(updatedList);
   }
 
+  const updateProjectTasks = async (userId: string, index: number, updatedProject: ProjectDetail) => {
+    await firebase.database().ref(`Users/${userId}/projectList/${index}/`)
+      .set(updatedProject)
+      .catch(e => console.log(e));
+  }
+
   initFirebase();
 
   return (
@@ -77,7 +83,8 @@ export const FirebaseAuthProvider = ({ children }: any) => {
       logout,
       projectList,
       setProjectList,
-      updateProjectList
+      updateProjectList,
+      updateProjectTasks
     }}>
       { children}
     </AuthContext.Provider>

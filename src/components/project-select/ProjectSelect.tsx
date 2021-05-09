@@ -11,6 +11,7 @@ export const ProjectSelect = () => {
   const { user, logout, projectList, updateProjectList } = useContext(AuthContext);
 
   const [selectedProject, setSelectedProject] = useState<ProjectDetail | undefined>(undefined);
+  const [selectedProjectIndex, setSelectedProjectIndex] = useState(-1);
   const [addProjectVisibility, setAddProjectVisibility] = useState(false);
   const [isCompletedColumn, setIsCompletedColumn] = useState(false);
   const [newProjectName, setNewProjectName] = useState('');
@@ -63,10 +64,25 @@ export const ProjectSelect = () => {
     setDraggedProject(undefined);
   }
 
+  // firebase does not save empty arrays - empty arrays will be re-added when going to project
+  const navigateToProjectDetail = (project: ProjectDetail, index: number) => {
+    setSelectedProjectIndex(index);
+    let tempProject = { ...project };
+    if (!tempProject.backlog) tempProject.backlog = [];
+    if (!tempProject.progress) tempProject.progress = [];
+    if (!tempProject.complete) tempProject.complete = [];
+    if (!tempProject.onHold) tempProject.onHold = [];
+    setSelectedProject(tempProject)
+  }
+
   return (
     <>
       {selectedProject ?
-        <ProjectTracker selectedProject={selectedProject} setSelectedProject={setSelectedProject} />
+        <ProjectTracker
+          selectedProject={selectedProject}
+          setSelectedProject={setSelectedProject}
+          projectIndex={selectedProjectIndex}
+        />
         :
         <>
           <h1>Welcome {user.displayName}, these are your projects:</h1>
@@ -128,7 +144,12 @@ export const ProjectSelect = () => {
                               />
                               <FontAwesomeIcon icon={faTimes} onClick={() => removeProject(project)} />
                             </div>
-                            <p className="project-text" onClick={() => setSelectedProject(project)}>{project.name}</p>
+                            <p
+                              className="project-text"
+                              onClick={() => navigateToProjectDetail(project, index)}
+                            >
+                              {project.name}
+                            </p>
                           </div>
                         </li>
                       )
@@ -225,7 +246,12 @@ export const ProjectSelect = () => {
                               />
                               <FontAwesomeIcon icon={faTimes} onClick={() => removeProject(project)} />
                             </div>
-                            <p className="project-text" onClick={() => setSelectedProject(project)}>{project.name}</p>
+                            <p
+                              className="project-text"
+                              onClick={() => navigateToProjectDetail(project, index)}
+                            >
+                              {project.name}
+                            </p>
                           </div>
                         </li>
                       )
