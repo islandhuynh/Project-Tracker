@@ -4,6 +4,7 @@ import { createContext, useState } from 'react';
 import 'firebase/auth';
 import 'firebase/database';
 import { firebaseConfig } from '../../config/firebaseconfig';
+import { ProjectDetail } from '../../schemas/projectDetail';
 
 export const AuthContext = createContext({} as any);
 
@@ -17,13 +18,14 @@ const initFirebase = () => {
 
 export const FirebaseAuthProvider = ({ children }: any) => {
   const [user, setUser] = useState<{} | null>(null);
+  const [projectList, setProjectList] = useState<ProjectDetail[]>([]);
 
   const login = async () => {
     await firebase.auth()
       .signInWithPopup(provider)
       .then((result) => {
-        console.log(result);
         setUser(result.user);
+        if (result.user) getUserData(result.user.uid!, result.user.email!);
       }).catch((error) => {
         console.log(error)
       })
@@ -34,6 +36,37 @@ export const FirebaseAuthProvider = ({ children }: any) => {
     setUser(null);
   }
 
+  const getUserData = async (userId: string, userEmail: string) => {
+    let userProfile = {
+      email: userEmail,
+      projectList: []
+    };
+
+    await firebase.database().ref('Users/' + userId).once('value').then(async (snapshot) => {
+      // if user does not exist, create new profile
+      if (!snapshot.exists()) {
+        await firebase.database().ref('Users/' + userId).set(userProfile);
+        setProjectList([]);
+      } else {
+        await firebase.database().ref('Users/' + userId).once('value').then(async (snapshot) => {
+          userProfile = snapshot.val();
+          if (userProfile.projectList) {
+            setProjectList(userProfile.projectList);
+          } else {
+            setProjectList([]);
+          }
+        })
+      }
+    })
+  }
+
+  const updateProjectList = async (userId: string, updatedList: ProjectDetail[]) => {
+    await firebase.database().ref('Users/' + userId + '/projectList/')
+      .set(updatedList)
+      .catch(e => console.log(e));
+    setProjectList(updatedList);
+  }
+
   initFirebase();
 
   return (
@@ -41,7 +74,10 @@ export const FirebaseAuthProvider = ({ children }: any) => {
       user,
       setUser,
       login,
-      logout
+      logout,
+      projectList,
+      setProjectList,
+      updateProjectList
     }}>
       { children}
     </AuthContext.Provider>

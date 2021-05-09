@@ -4,176 +4,11 @@ import { faEdit } from '@fortawesome/free-regular-svg-icons'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import { ProjectTracker } from '../project-tracker/ProjectTracker';
 import { AuthContext } from '../firebase-context/FirebaseContext';
+import { ProjectDetail } from '../../schemas/projectDetail';
 import Button from 'react-bootstrap/Button';
 
-const mockData = {
-  email: 'islandhuynh@gmail.com',
-  uuid: '123abc',
-  projectList: [
-    {
-      name: 'Battleship',
-      completeStatus: false,
-      backlog: [
-        "Drag and Drop Logic for Pieces",
-        "Rotate Pieces",
-      ],
-      progress: [
-        "Computer Logic"
-      ],
-      complete: [
-        "Board",
-        "Standard Pieces",
-        "Connect to Geo API",
-        "Connect to Places API",
-      ],
-      onHold: [
-        "Intermediate Computer",
-        "Advanced Computer"
-      ]
-    },
-    {
-      name: 'WhatsForLinner',
-      completeStatus: false,
-      backlog: [
-        "Create Favorites Folder"
-      ],
-      progress: [
-        "Create Authentification with Firebase",
-        "Connect to Geo API",
-        "Connect to Places API",
-        "Create Authentification with Firebase",
-      ],
-      complete: [
-        "Button Container",
-        "What to eat logic"
-      ],
-      onHold: [
-        "Sharing Restaurant List"
-      ]
-    },
-    {
-      name: 'WhatsForLinner',
-      completeStatus: true,
-      backlog: [
-        "Create Favorites Folder"
-      ],
-      progress: [
-        "Create Authentification with Firebase",
-        "Connect to Geo API",
-        "Connect to Places API",
-        "Create Authentification with Firebase",
-      ],
-      complete: [
-        "Button Container",
-        "What to eat logic"
-      ],
-      onHold: [
-        "Sharing Restaurant List"
-      ]
-    },
-    {
-      name: 'WhatsForLinner',
-      completeStatus: true,
-      backlog: [
-        "Create Favorites Folder"
-      ],
-      progress: [
-        "Create Authentification with Firebase",
-        "Connect to Geo API",
-        "Connect to Places API",
-        "Create Authentification with Firebase",
-      ],
-      complete: [
-        "Button Container",
-        "What to eat logic"
-      ],
-      onHold: [
-        "Sharing Restaurant List"
-      ]
-    },
-    {
-      name: 'WhatsForLinner',
-      completeStatus: true,
-      backlog: [
-        "Create Favorites Folder"
-      ],
-      progress: [
-        "Create Authentification with Firebase",
-        "Connect to Geo API",
-        "Connect to Places API",
-        "Create Authentification with Firebase",
-      ],
-      complete: [
-        "Button Container",
-        "What to eat logic"
-      ],
-      onHold: [
-        "Sharing Restaurant List"
-      ]
-    },
-    {
-      name: 'WhatsForLinner',
-      completeStatus: true,
-      backlog: [
-        "Create Favorites Folder"
-      ],
-      progress: [
-        "Create Authentification with Firebase",
-        "Connect to Geo API",
-        "Connect to Places API",
-        "Create Authentification with Firebase",
-      ],
-      complete: [
-        "Button Container",
-        "What to eat logic"
-      ],
-      onHold: [
-        "Sharing Restaurant List"
-      ]
-    },
-    {
-      name: 'WhatsForLinner',
-      completeStatus: true,
-      backlog: [
-        "Create Favorites Folder"
-      ],
-      progress: [
-        "Create Authentification with Firebase",
-        "Connect to Geo API",
-        "Connect to Places API",
-        "Create Authentification with Firebase",
-      ],
-      complete: [
-        "Button Container",
-        "What to eat logic"
-      ],
-      onHold: [
-        "Sharing Restaurant List"
-      ]
-    },
-  ]
-}
-
-const emptyProject = {
-  name: '',
-  completusState: true,
-  backlog: [],
-  progress: [],
-  complete: [],
-  onHold: []
-}
-
-interface ProjectDetail {
-  name: string,
-  completeStatus: boolean,
-  backlog: string[],
-  progress: string[],
-  complete: string[],
-  onHold: string[]
-}
-
 export const ProjectSelect = () => {
-  const { user, logout } = useContext(AuthContext);
+  const { user, logout, projectList, updateProjectList } = useContext(AuthContext);
 
   const [selectedProject, setSelectedProject] = useState<ProjectDetail | undefined>(undefined);
   const [addProjectVisibility, setAddProjectVisibility] = useState(false);
@@ -185,18 +20,24 @@ export const ProjectSelect = () => {
   const [draggedProject, setDraggedProject] = useState<ProjectDetail | undefined>(undefined)
 
   const addProject = (projectName: string, isCompleted: boolean) => {
-    mockData.projectList.push({
-      name: projectName,
-      completeStatus: isCompleted,
-      backlog: [],
-      progress: [],
-      complete: [],
-      onHold: []
-    })
+    updateProjectList(
+      user.uid,
+      [
+        ...projectList,
+        {
+          name: projectName,
+          completeStatus: isCompleted,
+          backlog: [],
+          progress: [],
+          complete: [],
+          onHold: []
+        }
+      ]
+    )
   }
 
   const editProject = (project: ProjectDetail, status: boolean) => {
-    const index = mockData.projectList.indexOf(project);
+    const index = projectList.indexOf(project);
     const newProject = {
       name: editProjectName,
       completeStatus: status,
@@ -205,17 +46,20 @@ export const ProjectSelect = () => {
       complete: [],
       onHold: []
     }
-    mockData.projectList[index] = newProject;
+    let tempProjectList = [...projectList];
+    tempProjectList[index] = newProject;
+    updateProjectList(user.uid, tempProjectList);
   }
 
-  const removeProject = (project: ProjectDetail) => {
-    const index = mockData.projectList.indexOf(project);
-    if (index > -1) mockData.projectList.splice(index, 1);
+  const removeProject = (projectToRemove: ProjectDetail) => {
+    updateProjectList(user.uid, projectList.filter((project: ProjectDetail) => project !== projectToRemove))
   }
 
   const projectDrop = (project: ProjectDetail, status: boolean) => {
-    const index = mockData.projectList.indexOf(project);
-    mockData.projectList[index].completeStatus = status;
+    const index = projectList.indexOf(project);
+    let tempProjectList = [...projectList];
+    tempProjectList[index].completeStatus = status;
+    updateProjectList(user.uid, tempProjectList);
     setDraggedProject(undefined);
   }
 
@@ -238,7 +82,7 @@ export const ProjectSelect = () => {
                   <h1>In-Progress</h1>
                 </span>
                 <div id="progress-content" className="custom-scroll">
-                  {mockData.projectList.map((project, index) => {
+                  {projectList.map((project: ProjectDetail, index: number) => {
                     if (!project.completeStatus && editProjectIndex === index && editProjectVisibility) {
                       return <>
                         <div className="new-input-container">
@@ -336,7 +180,7 @@ export const ProjectSelect = () => {
                   <h1>Completed</h1>
                 </span>
                 <div id="progress-content" className="custom-scroll">
-                  {mockData.projectList.map((project, index) => {
+                  {projectList.map((project: ProjectDetail, index: number) => {
                     if (project.completeStatus && editProjectIndex === index && editProjectVisibility) {
                       return <>
                         <div className="new-input-container">
