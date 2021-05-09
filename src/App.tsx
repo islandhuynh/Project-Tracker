@@ -11,13 +11,11 @@ export const App = () => {
 
   return (
     <div className="App">
-      <div>
-        {user ?
-          <ProjectSelect />
-          :
-          <Auth />
-        }
-      </div>
+      {user ?
+        <ProjectSelect />
+        :
+        <Auth />
+      }
     </div>
   );
 }

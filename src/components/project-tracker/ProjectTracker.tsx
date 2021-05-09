@@ -2,6 +2,7 @@ import { useState, FC, Dispatch } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEdit } from '@fortawesome/free-regular-svg-icons'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
+import Button from 'react-bootstrap/Button'
 
 interface columnList {
   "backlog": string,
@@ -222,7 +223,7 @@ export const ProjectTracker: FC<ProjectProps> = ({ selectedProject, setSelectedP
 
   return (
     <>
-      <button onClick={() => setSelectedProject(undefined)}>return</button>
+      <Button className="return-btn btn-dark" onClick={() => setSelectedProject(undefined)}>return</Button>
       <h1>{selectedProject.name}</h1>
       <div className="project-tracker-container">
         <ul className="project-list">

@@ -4,6 +4,7 @@ import { faEdit } from '@fortawesome/free-regular-svg-icons'
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import { ProjectTracker } from '../project-tracker/ProjectTracker';
 import { AuthContext } from '../firebase-context/FirebaseContext';
+import Button from 'react-bootstrap/Button';
 
 const mockData = {
   email: 'islandhuynh@gmail.com',
@@ -225,11 +226,11 @@ export const ProjectSelect = () => {
         :
         <>
           <h1>Welcome {user.displayName}, these are your projects:</h1>
-          <button onClick={() => logout()}>Signout</button>
+          <Button className="logout-btn btn-success" onClick={() => logout()}>Logout</Button>
           <div className="project-tracker-container">
             <ul className="project-list">
               <li
-                className="project-column complete-column"
+                className="project-column progress-column"
                 onDragOver={e => e.preventDefault()}
                 onDrop={() => { if (draggedProject) projectDrop(draggedProject, false) }}
               >
