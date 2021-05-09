@@ -84,7 +84,8 @@ export const FirebaseAuthProvider = ({ children }: any) => {
       projectList,
       setProjectList,
       updateProjectList,
-      updateProjectTasks
+      updateProjectTasks,
+      getUserData
     }}>
       { children}
     </AuthContext.Provider>

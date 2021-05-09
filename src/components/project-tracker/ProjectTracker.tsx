@@ -34,7 +34,7 @@ interface ProjectProps {
 }
 
 export const ProjectTracker: FC<ProjectProps> = ({ selectedProject, setSelectedProject, projectIndex }) => {
-  const { user, updateProjectTasks } = useContext(AuthContext);
+  const { user, updateProjectTasks, getUserData } = useContext(AuthContext);
 
   const [newInputVisibility, setNewInputVisibility] = useState(false);
   const [newTask, setNewTask] = useState<string | undefined>('');
@@ -112,9 +112,7 @@ export const ProjectTracker: FC<ProjectProps> = ({ selectedProject, setSelectedP
         onDragOver={e => e.preventDefault()}
         onDrop={() => {
           if (draggedTask) {
-            addTask(draggedTask, columnName)
-            if (removedItemColumn) removeTask(draggedTask, removedItemColumn)
-            setDraggedTask(undefined)
+            if (removedItemColumn) moveTask(draggedTask, columnName, removedItemColumn)
           }
         }}
       >
@@ -159,6 +157,62 @@ export const ProjectTracker: FC<ProjectProps> = ({ selectedProject, setSelectedP
         }
       </li>
     )
+  }
+
+  const moveTask = <C extends keyof columnList>(task: string, newColumn: C, removeColumn: C) => {
+    if (newColumn === removeColumn) return;
+    let tempNewArray: string[] = [];
+    let tempRemoveArray: string[] = [];
+    let tempProject: ProjectDetail = {
+      name: '',
+      completeStatus: false,
+      backlog: [],
+      progress: [],
+      complete: [],
+      onHold: [],
+    };
+
+    switch (newColumn) {
+      case columnSelection.BACKLOG:
+        tempNewArray = [...selectedProject.backlog, task];
+        tempProject = { ...selectedProject, backlog: tempNewArray };
+        break;
+      case columnSelection.PROGRESS:
+        tempNewArray = [...selectedProject.progress, task];
+        tempProject = { ...selectedProject, progress: tempNewArray };
+        break;
+      case columnSelection.COMPLETE:
+        tempNewArray = [...selectedProject.complete, task];
+        tempProject = { ...selectedProject, complete: tempNewArray };
+        break;
+      case columnSelection.ON_HOLD:
+        tempNewArray = [...selectedProject.onHold, task];
+        tempProject = { ...selectedProject, onHold: tempNewArray };
+        break;
+    }
+
+    // switch (removeColumn) {
+    //   case columnSelection.BACKLOG:
+    //     tempRemoveArray = tempNewArray.filter(projectTask => projectTask !== task)
+    //     tempProject = { ...tempProject, backlog: tempRemoveArray };
+    //     break;
+    //   case columnSelection.PROGRESS:
+    //     tempRemoveArray = tempNewArray.filter(projectTask => projectTask !== task)
+    //     tempProject = { ...tempProject, progress: tempRemoveArray };
+    //     break;
+    //   case columnSelection.COMPLETE:
+    //     tempRemoveArray = tempNewArray.filter(projectTask => projectTask !== task)
+    //     tempProject = { ...tempProject, complete: tempRemoveArray };
+    //     break;
+    //   case columnSelection.ON_HOLD:
+    //     tempRemoveArray = tempNewArray.filter(projectTask => projectTask !== task)
+    //     tempProject = { ...tempProject, onHold: tempRemoveArray };
+    //     break;
+    // }
+
+    setSelectedProject(tempProject);
+    updateProjectTasks(user.uid, projectIndex, tempProject);
+    setDraggedTask(undefined);
   }
 
   const addTask = <C extends keyof columnList>(task: string, column: C) => {
@@ -244,7 +298,15 @@ export const ProjectTracker: FC<ProjectProps> = ({ selectedProject, setSelectedP
 
   return (
     <>
-      <Button className="return-btn btn-dark" onClick={() => setSelectedProject(undefined)}>return</Button>
+      <Button
+        className="return-btn btn-dark"
+        onClick={() => {
+          getUserData(user.uid, user.email)
+          setSelectedProject(undefined)
+        }}
+      >
+        return
+      </Button>
       <h1>{selectedProject.name}</h1>
       <div className="project-tracker-container">
         <ul className="project-list">
