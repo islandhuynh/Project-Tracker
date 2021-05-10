@@ -171,6 +171,14 @@ export const ProjectTracker: FC<ProjectProps> = ({ selectedProject, setSelectedP
       complete: [],
       onHold: [],
     };
+    let secondTempProject: ProjectDetail = {
+      name: '',
+      completeStatus: false,
+      backlog: [],
+      progress: [],
+      complete: [],
+      onHold: [],
+    };
 
     switch (newColumn) {
       case columnSelection.BACKLOG:
@@ -191,27 +199,27 @@ export const ProjectTracker: FC<ProjectProps> = ({ selectedProject, setSelectedP
         break;
     }
 
-    // switch (removeColumn) {
-    //   case columnSelection.BACKLOG:
-    //     tempRemoveArray = tempNewArray.filter(projectTask => projectTask !== task)
-    //     tempProject = { ...tempProject, backlog: tempRemoveArray };
-    //     break;
-    //   case columnSelection.PROGRESS:
-    //     tempRemoveArray = tempNewArray.filter(projectTask => projectTask !== task)
-    //     tempProject = { ...tempProject, progress: tempRemoveArray };
-    //     break;
-    //   case columnSelection.COMPLETE:
-    //     tempRemoveArray = tempNewArray.filter(projectTask => projectTask !== task)
-    //     tempProject = { ...tempProject, complete: tempRemoveArray };
-    //     break;
-    //   case columnSelection.ON_HOLD:
-    //     tempRemoveArray = tempNewArray.filter(projectTask => projectTask !== task)
-    //     tempProject = { ...tempProject, onHold: tempRemoveArray };
-    //     break;
-    // }
+    switch (removeColumn) {
+      case columnSelection.BACKLOG:
+        tempRemoveArray = tempProject.backlog.filter(projectTask => projectTask !== task)
+        secondTempProject = { ...tempProject, backlog: tempRemoveArray };
+        break;
+      case columnSelection.PROGRESS:
+        tempRemoveArray = tempProject.progress.filter(projectTask => projectTask !== task)
+        secondTempProject = { ...tempProject, progress: tempRemoveArray };
+        break;
+      case columnSelection.COMPLETE:
+        tempRemoveArray = tempProject.complete.filter(projectTask => projectTask !== task)
+        secondTempProject = { ...tempProject, complete: tempRemoveArray };
+        break;
+      case columnSelection.ON_HOLD:
+        tempRemoveArray = selectedProject.onHold.filter(projectTask => projectTask !== task)
+        tempProject = { ...tempProject, onHold: tempRemoveArray };
+        break;
+    }
 
-    setSelectedProject(tempProject);
-    updateProjectTasks(user.uid, projectIndex, tempProject);
+    setSelectedProject(secondTempProject);
+    updateProjectTasks(user.uid, projectIndex, secondTempProject);
     setDraggedTask(undefined);
   }
 
@@ -237,6 +245,7 @@ export const ProjectTracker: FC<ProjectProps> = ({ selectedProject, setSelectedP
         tempProject = { ...selectedProject, onHold: tempArray };
         break;
     }
+
     setSelectedProject(tempProject);
     updateProjectTasks(user.uid, projectIndex, tempProject);
   }
