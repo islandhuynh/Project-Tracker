@@ -214,7 +214,7 @@ export const ProjectTracker: FC<ProjectProps> = ({ selectedProject, setSelectedP
         break;
       case columnSelection.ON_HOLD:
         tempRemoveArray = tempProject.onHold.filter(projectTask => projectTask !== task)
-        tempProject = { ...tempProject, onHold: tempRemoveArray };
+        secondTempProject = { ...tempProject, onHold: tempRemoveArray };
         break;
     }
 
