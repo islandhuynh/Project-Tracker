@@ -1,4 +1,39 @@
-# Getting Started with Create React App
+# Project Tracker
+
+![Project Image](https://user-images.githubusercontent.com/74833309/119282148-85782000-bc06-11eb-8dc7-d5243fb889ff.PNG)
+
+> An easy to use web application to help you track your project milestones!
+
+---
+
+## Table of Contents
+You're sections headers will be used to reference location of destination.
+
+- [Description](#description)
+- [How To Use](#how-to-use)
+- [License](#license)
+- [Author Info](#author-info)
+
+---
+
+## Description
+
+An interactive web application for users to track their projects. Users sign in using their Google accounts to start adding projects. Within each project, the user can add, edit, and delete tasks. All information is saved to user specific accounts via a cloud database.
+
+### Technologies
+
+- React
+- TypeScript
+- Firebase Realtime Database
+- Google Authentification
+
+[Back To The Top](#read-me-template)
+
+---
+
+## How To Use
+
+## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
@@ -39,8 +74,29 @@ Instead, it will copy all the configuration files and the transitive dependencie
 
 You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
+
 ## Learn More
 
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+
+[Back To The Top](#read-me-template)
+
+---
+
+## License
+
+MIT License
+
+[Back To The Top](#read-me-template)
+
+---
+
+## Author Info
+
+- Github - [islandhuynh](https://github.com/islandhuynh)
+- Website - [Island Huynh](https://island-huynh.netlify.app/)
+
+[Back To The Top](#read-me-template)
