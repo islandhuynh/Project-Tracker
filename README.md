@@ -20,6 +20,8 @@ You're sections headers will be used to reference location of destination.
 
 An interactive web application for users to track their projects. Users sign in using their Google accounts to start adding projects. Within each project, the user can add, edit, and delete tasks. All information is saved to user specific accounts via a cloud database.
 
+View the deployed application [here](https://project-tracker-4bb40.web.app/)!
+
 ### Technologies
 
 - React
@@ -28,8 +30,6 @@ An interactive web application for users to track their projects. Users sign in 
 - Google Authentification
 
 [Back To The Top](#read-me-template)
-
----
 
 ## How To Use
 
