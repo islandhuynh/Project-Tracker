@@ -33,8 +33,6 @@ View the deployed application [here](https://project-tracker-4bb40.web.app/)!
 
 ## How To Use
 
-## Getting Started with Create React App
-
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
